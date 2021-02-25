@@ -7,7 +7,7 @@ namespace chaser\http\route;
 use Attribute;
 use Closure;
 
-#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_FUNCTION)]
+#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_FUNCTION | Attribute::IS_REPEATABLE)]
 class Map
 {
     /**
