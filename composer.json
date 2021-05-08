@@ -4,7 +4,7 @@
   "type": "library",
   "require": {
     "php": "^8.0",
-    "7csn/reflection-collector": "dev-master"
+    "7csn/reflection-collector": "@dev"
   },
   "license": "MIT",
   "authors": [
@@ -13,7 +13,6 @@
       "email": "1479672753@qq.com"
     }
   ],
-  "minimum-stability": "dev",
   "autoload": {
     "psr-4": {
       "chaser\\http\\route\\": "src/"
