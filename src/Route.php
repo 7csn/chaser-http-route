@@ -218,10 +218,10 @@ class Route
      * @param string $rule
      * @param Closure|string $point
      * @param array $where
-     * @param array $middleware
+     * @param array $middlewares
      * @param int $cacheDuration
      */
-    public function __construct(private string $rule, private Closure|string $point, array $where = [], private array $middleware = [], private int $cacheDuration = 0)
+    public function __construct(private string $rule, private Closure|string $point, array $where = [], private array $middlewares = [], private int $cacheDuration = 0)
     {
         $this->makePattern($where);
     }
@@ -258,6 +258,26 @@ class Route
     }
 
     /**
+     * 获取中间件
+     *
+     * @return array
+     */
+    public function getMiddlewares(): array
+    {
+        return $this->middlewares;
+    }
+
+    /**
+     * 获取路由缓存时间
+     *
+     * @return int
+     */
+    public function getCacheDuration(): int
+    {
+        return $this->cacheDuration;
+    }
+
+    /**
      * 字符串化：路由规则
      *
      * @return string
@@ -280,9 +300,11 @@ class Route
         $gain = null;
         if (isset(self::$taps[$domain][$method])) {
             foreach (self::$taps[$domain][$method] as $rule => $route) {
-                $args = $route->match($path);
-                if ($args !== null) {
-                    $gain = ['point' => $route->getPoint(), 'args' => $args];
+                if (null !== $args = $route->match($path)) {
+                    $point = $route->getPoint();
+                    $middlewares = $route->getMiddlewares();
+                    $cacheDuration = $route->getCacheDuration();
+                    $gain = compact('point', 'args', 'middlewares', 'cacheDuration');
                     break;
                 }
             }
