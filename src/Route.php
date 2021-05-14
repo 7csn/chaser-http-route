@@ -21,13 +21,6 @@ class Route
     private static array $taps = [];
 
     /**
-     * 路由检索缓存
-     *
-     * @var array
-     */
-    private static array $searches = [];
-
-    /**
      * 路由正则
      *
      * @var string
@@ -52,16 +45,11 @@ class Route
     }
 
     /**
-     * 清空搜索缓存及路由开关数组（可选）
-     *
-     * @param bool $taps
+     * 清空路由开关数组
      */
-    public static function clear(bool $taps = false): void
+    public static function clear(): void
     {
-        self::$searches = [];
-        if ($taps) {
-            self::$taps = [];
-        }
+        self::$taps = [];
     }
 
     /**
@@ -76,10 +64,6 @@ class Route
     {
         $path = trim($path, '/');
 
-        if (isset(self::$searches[$path])) {
-            return self::$searches[$path];
-        }
-
         $methods = $method === '*' ? ['*'] : [$method, '*'];
         $domains = $domain === '*' ? ['*'] : [$domain, '*'];
 
@@ -92,8 +76,6 @@ class Route
                 }
             }
         }
-
-        self::$searches[$path] = $search;
 
         return $search;
     }
@@ -266,6 +248,16 @@ class Route
     }
 
     /**
+     * 返回路由回调
+     *
+     * @return Closure|string
+     */
+    public function getPoint(): Closure|string
+    {
+        return $this->point;
+    }
+
+    /**
      * 字符串化：路由规则
      *
      * @return string
@@ -290,7 +282,7 @@ class Route
             foreach (self::$taps[$domain][$method] as $rule => $route) {
                 $args = $route->match($path);
                 if ($args !== null) {
-                    $gain = compact('path', 'route', 'args', 'method', 'domain');
+                    $gain = ['point' => $route->getPoint(), 'args' => $args];
                     break;
                 }
             }
