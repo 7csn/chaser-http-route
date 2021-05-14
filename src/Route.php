@@ -197,15 +197,15 @@ class Route
      */
     public static function addBatch(self $route, array $methods = null, array $domains = null): void
     {
-        if ($methods !== null) {
+        if (empty($methods)) {
             $methods = ['*'];
         }
 
-        if ($domains !== null) {
+        if (empty($domains)) {
             $domains = ['*'];
         }
 
-        foreach ($domains ?: ['*'] as $domain) {
+        foreach ($domains as $domain) {
             foreach ($methods as $method) {
                 self::add($route, $method, $domain);
             }
